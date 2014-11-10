@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 # -*- mode:makefile -*-
 ##### Author: Travis Cross <tc@traviscross.com>
+##### Contributor: Joao Mesquita <jmesquita@freeswitch.org>
 
 #export DH_VERBOSE=1
 
@@ -76,16 +77,12 @@ build-indep: $(dflacs)
 
 get-orig-source:
 	$(eval tmpdir := $(shell mktemp -d --tmpdir=.))
-	wget -O $(tmpdir)/upstream.tgz "http://files.freeswitch.org/$(upkg)-$(srate)-$(ver).tar.gz"
+	tar -czvf $(tmpdir)/upstream.tgz es
 	mkdir -p $(tmpdir)/$(pkg)-$(ver)
 	tar -x -C $(tmpdir)/$(pkg)-$(ver) -f $(tmpdir)/upstream.tgz
-	if [ -d $(tmpdir)/$(pkg)-$(ver)/music ]; then \
-	  mv $(tmpdir)/$(pkg)-$(ver)/music/$(srate) $(tmpdir)/$(pkg)-$(ver)/music/$(sound); \
-	else \
-	  for x in $(tmpdir)/$(pkg)-$(ver)/*/*/*/*; do \
-	    for y in $$x/*; do mv $$y/* $$x; rmdir $$y; done; \
-	  done; \
-	fi
+	for x in $(tmpdir)/$(pkg)-$(ver)/*/*/*/*; do \
+	  for y in $$x/*; do mv $$y/* $$x; rmdir $$y; done; \
+	done; \
 	tar -c -C $(tmpdir) -f $(pkg)_$(ver).orig.tar $(pkg)-$(ver)
 	xz -9ev $(pkg)_$(ver).orig.tar
 	rm -rf $(tmpdir)
