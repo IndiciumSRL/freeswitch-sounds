@@ -76,16 +76,18 @@ build-arch:
 build-indep: $(dflacs)
 
 get-orig-source:
-	$(eval tmpdir := $(shell mktemp -d --tmpdir=.))
-	tar -czvf $(tmpdir)/upstream.tgz es
-	mkdir -p $(tmpdir)/$(pkg)-$(ver)
-	tar -x -C $(tmpdir)/$(pkg)-$(ver) -f $(tmpdir)/upstream.tgz
-	for x in $(tmpdir)/$(pkg)-$(ver)/*/*/*/*; do \
-	  for y in $$x/*; do mv $$y/* $$x; rmdir $$y; done; \
-	done; \
-	tar -c -C $(tmpdir) -f $(pkg)_$(ver).orig.tar $(pkg)-$(ver)
-	xz -9ev $(pkg)_$(ver).orig.tar
-	rm -rf $(tmpdir)
+	# $(eval tmpdir := $(shell mktemp -d --tmpdir=.))
+	mkdir -p $(pkg)-$(ver)
+	cp -a es $(pkg)-$(ver)/
+	tar -czf ../$(pkg)_$(ver).orig.tar.gz $(pkg)-$(ver)
+	mv $(pkg)-$(ver) ../
+	# mkdir -p $(tmpdir)/$(pkg)-$(ver)
+	# for x in $(tmpdir)/$(pkg)-$(ver)/*/*/*/*; do \
+	#   for y in $$x/*; do mv $$y/* $$x; rmdir $$y; done; \
+	# done; \
+	# tar -c -C $(tmpdir) -f $(pkg)_$(ver).orig.tar $(pkg)-$(ver)
+	# xz -9ev $(pkg)_$(ver).orig.tar
+	# rm -rf $(tmpdir)
 
 clean:
 	rm -rf build
