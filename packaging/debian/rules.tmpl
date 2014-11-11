@@ -76,10 +76,10 @@ build-arch:
 build-indep: $(dflacs)
 
 get-orig-source:
-	./debian/dist.pl
+	cd ../ && ./dist.pl
 	$(eval tmpdir := $(shell mktemp -d --tmpdir=.))
 	#wget -O $(tmpdir)/upstream.tgz "http://files.freeswitch.org/$(upkg)-$(srate)-$(ver).tar.gz"
-	cp -a ./debian/$(upkg)-$(srate)-$(ver).tar.gz $(tmpdir)/upstream.tgz
+	cp -a ../$(upkg)-$(srate)-$(ver).tar.gz $(tmpdir)/upstream.tgz
 	mkdir -p $(tmpdir)/$(pkg)-$(ver)
 	tar -x -C $(tmpdir)/$(pkg)-$(ver) -f $(tmpdir)/upstream.tgz
 	if [ -d $(tmpdir)/$(pkg)-$(ver)/music ]; then \
@@ -94,7 +94,6 @@ get-orig-source:
 	rm -rf $(tmpdir)
 
 clean:
-	rm -rf ./debian/*.tar.gz
 	rm -rf build
 	dh_testdir
 	dh_clean
